@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] GameObject playerSprite;
 
-    [SerializeField] bool canDie;
+    [SerializeField] bool didDamage;
 
     void Start()
     {
@@ -26,7 +27,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown("z") || Input.GetKeyDown("x"))
         {
-            //canDie = true;
+            didDamage = false;
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             dashDir = mousePos - transform.position;
             dashDir.z = 0f;
@@ -47,9 +48,10 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Enemy")
+        if (other.gameObject.tag == "Enemy" && !didDamage)
         {
-            canDie = false;
+            Debug.Log("Enemy Hit");
+            didDamage = true;
             playerRb.velocity = Vector3.zero;
             playerRb.angularVelocity = Vector3.zero;
             other.gameObject.GetComponent<EnemyController>().health--;
@@ -63,11 +65,11 @@ public class PlayerController : MonoBehaviour
         {
             playerRb.velocity = Vector3.zero;
             playerRb.angularVelocity = Vector3.zero;
-
-            if (canDie)
+            /*
+            if (!didDamage)
             {
-                Destroy(gameObject);
-            }
+                Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
+            }*/
         }
     }
 }

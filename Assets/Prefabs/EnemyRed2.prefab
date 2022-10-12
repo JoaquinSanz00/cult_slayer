@@ -4881,6 +4881,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5380052545901877640}
   - component: {fileID: 5380052545901877641}
+  - component: {fileID: 5487019678681474558}
+  - component: {fileID: 2339724832906521988}
   m_Layer: 0
   m_Name: EnemyRed2Sprite
   m_TagString: Untagged
@@ -4953,6 +4955,38 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5487019678681474558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5380052545901877654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3fdfc6c6adb37b48b0d32f1d5062688, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NPCType: 2
+--- !u!95 &2339724832906521988
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5380052545901877654}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a7d21c45331213b4ab6fe8a276f6f817, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5380052546067361503
 GameObject:
   m_ObjectHideFlags: 0
@@ -5058,7 +5092,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7490996891053587681}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.05, y: -0.1, z: -0.38}
+  m_LocalPosition: {x: -0.05, y: -0.1, z: -1}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 5380052546067361489}
