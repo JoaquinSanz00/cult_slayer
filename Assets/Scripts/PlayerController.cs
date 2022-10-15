@@ -6,16 +6,20 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] Vector3 dashDir;
-    [SerializeField] Vector3 mousePos;
-    [SerializeField] Rigidbody playerRb;
     [SerializeField] float speed;
     [SerializeField] GameObject playerSprite;
 
     [SerializeField] bool didDamage;
+    [SerializeField] bool canDash;
+    [SerializeField] GameObject currentEnemy;
+    [SerializeField] ParticleSystem stunParticles;
+
+    private Ray mouseRay;
+    private RaycastHit hit;
 
     void Start()
     {
-        playerRb = gameObject.GetComponent<Rigidbody>();
+        canDash = true;
     }
 
     void Update()
@@ -25,51 +29,55 @@ public class PlayerController : MonoBehaviour
 
     void Dash()
     {
+        mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+
         if (Input.GetKeyDown("z") || Input.GetKeyDown("x"))
         {
-            didDamage = false;
-            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            dashDir = mousePos - transform.position;
-            dashDir.z = 0f;
-            dashDir.Normalize();
-            playerRb.AddForce(dashDir * speed, ForceMode.Impulse);
-
-            if (dashDir.x > 0)
+            if (Physics.Raycast(mouseRay.origin, mouseRay.direction, out hit))
             {
-                playerSprite.transform.localScale = new Vector3(10f, 10f, 10f);
-            }
+                didDamage = false;
 
-            if (dashDir.x < 0)
-            {
-                playerSprite.transform.localScale = new Vector3(-10f, 10f, 10f);
+                if (hit.collider.transform.tag == "Enemy" && !didDamage && canDash)
+                {
+                    currentEnemy = hit.collider.gameObject;
+                    dashDir = hit.collider.gameObject.transform.position - transform.position;
+                    dashDir.z = 0f;
+                    dashDir.Normalize();
+                    LeanTween.move(gameObject, hit.collider.gameObject.transform.position + (dashDir * 1.2f), 0.1f).setOnComplete(DealDamage);
+                }
+
+                if (hit.collider.transform.tag == "DeathWall" && canDash)
+                {
+                    LeanTween.move(gameObject, hit.point, 0.1f).setOnComplete(GetStunned);
+                }
+
+                if (dashDir.x > 0) playerSprite.transform.localScale = new Vector3(10f, 10f, 10f);
+                if (dashDir.x < 0) playerSprite.transform.localScale = new Vector3(-10f, 10f, 10f);
             }
-        }    
+        }
     }
 
-    private void OnTriggerEnter(Collider other)
+    void DealDamage()
     {
-        if (other.gameObject.tag == "Enemy" && !didDamage)
+        if (!didDamage)
         {
-            Debug.Log("Enemy Hit");
             didDamage = true;
-            playerRb.velocity = Vector3.zero;
-            playerRb.angularVelocity = Vector3.zero;
-            other.gameObject.GetComponent<EnemyController>().health--;
-            other.gameObject.GetComponent<EnemyController>().Die(dashDir);
+            currentEnemy.GetComponent<EnemyController>().health--;
+            currentEnemy.gameObject.GetComponent<EnemyController>().Die(dashDir);
         }
     }
 
-    private void OnCollisionEnter(Collision other)
+    void GetStunned()
     {
-        if (other.gameObject.tag == "DeathWall")
-        {
-            playerRb.velocity = Vector3.zero;
-            playerRb.angularVelocity = Vector3.zero;
-            /*
-            if (!didDamage)
-            {
-                Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
-            }*/
-        }
+        StartCoroutine(GetStunnedCR());
+    }
+    IEnumerator GetStunnedCR()
+    {
+        stunParticles.Play();
+        canDash = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        canDash = true;
     }
 }

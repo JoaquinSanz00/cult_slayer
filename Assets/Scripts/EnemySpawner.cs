@@ -9,6 +9,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] GameObject[] enemies;
     [SerializeField] GameObject[] fires;
     [SerializeField] float spawnRate;
+    [SerializeField] int currentKills;
     [SerializeField] public int totalKills;
     [SerializeField] public int totalEnemies;
     [SerializeField] TextMeshProUGUI totalKillsText;
@@ -41,6 +42,7 @@ public class EnemySpawner : MonoBehaviour
 
         newEnemy.transform.localScale = Vector3.zero;
         LeanTween.scale(newEnemy, new Vector3(1f, 1f, 1f), 0.3f).setEase(LeanTweenType.easeOutBack);
+        newEnemy.GetComponentInChildren<Animator>().SetBool("spawn", true);
 
         if (randomLocation.x > 0)
         {
@@ -59,51 +61,10 @@ public class EnemySpawner : MonoBehaviour
 
     void IncreaseSpawnRate()
     {
-        switch(totalKills)
+        if (currentKills == 5)
         {
-            case 5:
-                spawnRate = 1.75f;
-                break;
-
-            case 15:
-                spawnRate = 1.50f;
-                break;
-
-            case 30:
-                spawnRate = 1.25f;
-                break;
-
-            case 40:
-                spawnRate = 1f;
-                break;
-
-            case 50:
-                spawnRate = 0.75f;
-                break;
-
-            case 60:
-                spawnRate = 0.6f;
-                break;
-
-            case 70:
-                spawnRate = 0.5f;
-                break;
-
-            case 90:
-                spawnRate = 0.4f;
-                break;
-
-            case 120:
-                spawnRate = 0.3f;
-                break;
-
-            case 150:
-                spawnRate = 0.2f;
-                break;
-
-            case 200:
-                spawnRate = 0.1f;
-                break;
+            spawnRate *= 0.90f;
+            currentKills = 0;
         }
 
         foreach(GameObject fire in fires)
