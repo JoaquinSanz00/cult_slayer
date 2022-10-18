@@ -6,6 +6,7 @@ using TMPro;
 
 public class EnemySpawner : MonoBehaviour
 {
+
     [SerializeField] GameObject[] enemies;
     [SerializeField] GameObject[] fires;
     [SerializeField] float spawnRate;
@@ -15,8 +16,14 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] TextMeshProUGUI totalKillsText;
     [SerializeField] int enemy1RNG, enemy2RNG, enemy3RNG, enemy4RNG;
     int enemyIndex;
+    [SerializeField] public bool gameOver;
+
+    [SerializeField] Animator uiAnim;
+    [SerializeField] GameObject[] startPieces;
     void Start()
     {
+        gameOver = false;
+
         spawnRate = 1.5f;
 
         enemyIndex = 0;
@@ -32,18 +39,23 @@ public class EnemySpawner : MonoBehaviour
     {
         if (totalEnemies >= 6)
         {
-            Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
+            uiAnim.SetBool("gameover", true);
+            gameOver = true;
         }
 
         totalKillsText.text = $"{totalKills}";
 
         IncreaseSpawnRate();
+        ActivateStar();
     }
 
+    public void ResetScene()
+    {
+        Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
+    }
     IEnumerator SpawnEnemy()
     {
         int enemyRange = Random.Range(1, 100);
-        Debug.Log(enemyRange);
         if (enemyRange <= enemy1RNG) enemyIndex = 0;
         if (enemyRange > enemy1RNG && enemyRange < enemy3RNG) enemyIndex = 1;
         if (enemyRange > enemy2RNG && enemyRange < enemy4RNG) enemyIndex = 2;
@@ -51,7 +63,7 @@ public class EnemySpawner : MonoBehaviour
 
         Vector3 randomLocation = new Vector3(Random.Range(-6.5f, 6.5f), Random.Range(-3.6f, 3.6f), 0f);
 
-        GameObject newEnemy = Instantiate(enemies[enemyIndex],randomLocation , Quaternion.identity);
+        GameObject newEnemy = Instantiate(enemies[enemyIndex], randomLocation , Quaternion.identity);
 
         totalEnemies++;
 
@@ -61,17 +73,17 @@ public class EnemySpawner : MonoBehaviour
 
         if (randomLocation.x > 0)
         {
-            newEnemy.GetComponentInChildren<SpriteRenderer>().gameObject.transform.localScale = new Vector3(10f, 10f, 10f);
+            newEnemy.transform.localScale = new Vector3(1f, 1f, 1f);
         }
 
         if (randomLocation.x < 0)
         {
-            newEnemy.GetComponentInChildren<SpriteRenderer>().gameObject.transform.localScale = new Vector3(-10f, 10f, 10f);
+            newEnemy.transform.localScale = new Vector3(-1f, 1f, 1f);
         }
 
         yield return new WaitForSeconds(spawnRate);
 
-        StartCoroutine(SpawnEnemy());
+        if(!gameOver) StartCoroutine(SpawnEnemy());
     }
 
     void IncreaseSpawnRate()
@@ -143,6 +155,39 @@ public class EnemySpawner : MonoBehaviour
         foreach (GameObject fire in fires)
         {
             fire.GetComponentInChildren<Animator>().speed = 1 / spawnRate;
+        }
+    }
+
+    void ActivateStar()
+    {
+        switch(totalEnemies)
+        {
+            case 0:
+                LeanTween.color(startPieces[0], Color.clear, 0.1f);
+                break;
+            case 1:
+                LeanTween.color(startPieces[0], Color.white, 0.1f);
+                LeanTween.color(startPieces[1], Color.clear, 0.1f);
+                break;
+            case 2:
+                LeanTween.color(startPieces[1], Color.white, 0.1f);
+                LeanTween.color(startPieces[2], Color.clear, 0.1f);
+                break;
+            case 3:
+                LeanTween.color(startPieces[2], Color.white, 0.1f);
+                LeanTween.color(startPieces[3], Color.clear, 0.1f);
+                break;
+            case 4:
+                LeanTween.color(startPieces[3], Color.white, 0.1f);
+                LeanTween.color(startPieces[4], Color.clear, 0.1f);
+                break;
+            case 5:
+                LeanTween.color(startPieces[4], Color.white, 0.1f);
+                LeanTween.color(startPieces[5], Color.clear, 0.1f);
+                break;
+            case 6:
+                LeanTween.color(startPieces[5], Color.white, 0.1f);
+                break;
         }
     }
 }

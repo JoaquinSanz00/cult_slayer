@@ -5,12 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float speed;
+    [SerializeField] float dashSpeed;
     [SerializeField] GameObject playerSprite;
 
     [SerializeField] bool didDamage;
     [SerializeField] bool canDash;
     [SerializeField] ParticleSystem stunParticles;
+    [SerializeField] EnemySpawner enemySpawner;
 
     GameObject currentEnemy;
     Vector3 dashDir;
@@ -34,6 +35,8 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown("z") || Input.GetKeyDown("x"))
         {
+            if (enemySpawner.gameOver) return;
+
             if (Physics.Raycast(mouseRay.origin, mouseRay.direction, out hit))
             {
                 didDamage = false;
@@ -45,7 +48,7 @@ public class PlayerController : MonoBehaviour
                     dashDir = hit.collider.gameObject.transform.position - transform.position;
                     dashDir.z = 0f;
                     dashDir.Normalize();
-                    LeanTween.move(gameObject, hit.collider.gameObject.transform.position + (dashDir * 1.2f), speed).setOnComplete(DealDamage);
+                    LeanTween.move(gameObject, hit.collider.gameObject.transform.position + (dashDir * 1.2f), dashSpeed).setOnComplete(DealDamage);
                 }
 
                 if (hit.collider.transform.tag == "DeathWall" && canDash)
