@@ -459,36 +459,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &176092578
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 176092579}
-  m_Layer: 0
-  m_Name: LevelProgression
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &176092579
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 176092578}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7648132, y: 0.3769456, z: 0.16256785}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &181478196
 GameObject:
   m_ObjectHideFlags: 0
@@ -21148,7 +21118,7 @@ GameObject:
   - component: {fileID: 783376474}
   - component: {fileID: 783376473}
   m_Layer: 0
-  m_Name: Particle System
+  m_Name: StunParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26048,7 +26018,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &917295660
 GameObject:
@@ -26573,7 +26543,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 030c285270ecea24f9124d11ff1ce46e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -27045,7 +27015,7 @@ RectTransform:
   - {fileID: 917295661}
   - {fileID: 318830314}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -27098,16 +27068,22 @@ MonoBehaviour:
   enemies:
   - {fileID: 355383671233594852, guid: bb9995f974918444dbd26478069f882d, type: 3}
   - {fileID: 5380052546067361503, guid: 1b8c85dbca804b24b8a70e2ffb015ab8, type: 3}
+  - {fileID: 5614160296819143765, guid: 27d20d41e3bd96f4b8537721459a18ef, type: 3}
+  - {fileID: 1452965010714783373, guid: 50b26b805acebf0429c7fd97497126b1, type: 3}
   fires:
   - {fileID: 1686580455}
   - {fileID: 1440167133}
   - {fileID: 926747722}
   - {fileID: 1878544007}
-  spawnRate: 1
+  spawnRate: 1.5
   currentKills: 0
   totalKills: 0
   totalEnemies: 0
   totalKillsText: {fileID: 318830315}
+  enemy1RNG: 0
+  enemy2RNG: 0
+  enemy3RNG: 0
+  enemy4RNG: 0
 --- !u!1 &1403629149
 GameObject:
   m_ObjectHideFlags: 0
@@ -27347,12 +27323,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a6b9752a313ac40b22e5d3b9b17235, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashDir: {x: 0, y: 0, z: 0}
-  speed: 100
+  speed: 0.05
   playerSprite: {fileID: 1029102781}
   didDamage: 0
   canDash: 0
-  currentEnemy: {fileID: 0}
   stunParticles: {fileID: 783376474}
 --- !u!4 &1460043905
 Transform:
@@ -28221,7 +28195,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.2
+  m_Time: 0.3
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1

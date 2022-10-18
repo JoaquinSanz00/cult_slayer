@@ -5,14 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] Vector3 dashDir;
     [SerializeField] float speed;
     [SerializeField] GameObject playerSprite;
 
     [SerializeField] bool didDamage;
     [SerializeField] bool canDash;
-    [SerializeField] GameObject currentEnemy;
     [SerializeField] ParticleSystem stunParticles;
+
+    GameObject currentEnemy;
+    Vector3 dashDir;
 
     private Ray mouseRay;
     private RaycastHit hit;
@@ -39,15 +40,17 @@ public class PlayerController : MonoBehaviour
 
                 if (hit.collider.transform.tag == "Enemy" && !didDamage && canDash)
                 {
+                    canDash = false;
                     currentEnemy = hit.collider.gameObject;
                     dashDir = hit.collider.gameObject.transform.position - transform.position;
                     dashDir.z = 0f;
                     dashDir.Normalize();
-                    LeanTween.move(gameObject, hit.collider.gameObject.transform.position + (dashDir * 1.2f), 0.1f).setOnComplete(DealDamage);
+                    LeanTween.move(gameObject, hit.collider.gameObject.transform.position + (dashDir * 1.2f), speed).setOnComplete(DealDamage);
                 }
 
                 if (hit.collider.transform.tag == "DeathWall" && canDash)
                 {
+                    canDash = false;
                     LeanTween.move(gameObject, hit.point, 0.1f).setOnComplete(GetStunned);
                 }
 
@@ -61,9 +64,13 @@ public class PlayerController : MonoBehaviour
     {
         if (!didDamage)
         {
+            EnemyController enemy = currentEnemy.GetComponent<EnemyController>();
             didDamage = true;
-            currentEnemy.GetComponent<EnemyController>().health--;
-            currentEnemy.gameObject.GetComponent<EnemyController>().Die(dashDir);
+            enemy.health--;
+            enemy.Die(dashDir);
+            LeanTween.color(enemy.damageSprite.gameObject, Color.white, 0.025f).setLoopPingPong(1);
+            LeanTween.scale(currentEnemy, currentEnemy.transform.localScale * 1.1f, 0.025f).setLoopPingPong(1);
+            canDash = true;
         }
     }
 

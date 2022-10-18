@@ -6,8 +6,10 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField] public int health;
     [SerializeField] public ParticleSystem deathParticle;
+    [SerializeField] public ParticleSystem deathExplosion;
     [SerializeField] EnemySpawner enemySpawner;
-    [SerializeField] MeshRenderer shadow;
+    [SerializeField] SpriteRenderer shadow;
+    [SerializeField] public SpriteRenderer damageSprite;
 
     void OnEnable()
     {
@@ -29,8 +31,10 @@ public class EnemyController : MonoBehaviour
             float particleAngle = Mathf.Atan2(deathAngle.y, deathAngle.x) * Mathf.Rad2Deg;
             deathParticle.gameObject.transform.rotation = Quaternion.Euler(particleAngle + 180f, -90f, 90f);
             deathParticle.Play();
+            deathExplosion.Play();
             enemySpawner.totalEnemies--;
             enemySpawner.totalKills++;
+            enemySpawner.currentKills++;
         }
     }
 }
