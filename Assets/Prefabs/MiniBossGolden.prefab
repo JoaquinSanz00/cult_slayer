@@ -4930,7 +4930,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: c0288f9e1d32c9f4b94ce93357dc9455, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1fd5ff8477e7bd142822c29536047da6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
@@ -24446,7 +24446,7 @@ GameObject:
   - component: {fileID: 2214423178121828491}
   - component: {fileID: 7001005899588374768}
   m_Layer: 0
-  m_Name: EnemyRed5
+  m_Name: MiniBossGolden
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24482,13 +24482,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 40
+  maxHealth: 0
   deathParticle: {fileID: 7670609145322471370}
   deathExplosion: {fileID: 8414027581968680020}
   enemySpawner: {fileID: 0}
   shadow: {fileID: 2737613641522580199}
   damageSprite: {fileID: 726582528599707133}
   dead: 0
+  isShadow: 0
   isGolden: 0
+  eyes: []
 --- !u!135 &4225546754178705999
 SphereCollider:
   m_ObjectHideFlags: 0

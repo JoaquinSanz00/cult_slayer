@@ -69,11 +69,8 @@ public class PlayerController : MonoBehaviour
         if (!didDamage)
         {
             EnemyController enemy = currentEnemy.GetComponent<EnemyController>();
+            enemy.TakeDamage(dashDir);
             didDamage = true;
-            enemy.health--;
-            enemy.Die(dashDir);
-            LeanTween.color(enemy.damageSprite.gameObject, Color.white, 0.025f).setLoopPingPong(1);
-            LeanTween.scale(currentEnemy, currentEnemy.transform.localScale * 1.1f, 0.025f).setLoopPingPong(1);
             canDash = true;
         }
     }

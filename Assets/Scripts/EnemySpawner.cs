@@ -18,7 +18,7 @@ public class EnemySpawner : MonoBehaviour
     int enemyIndex;
     [SerializeField] public bool gameOver;
 
-    [SerializeField] public bool goldenSpawn;
+    [SerializeField] public bool bossAlive;
 
     [SerializeField] Animator uiAnim;
     [SerializeField] GameObject[] enemyBar;
@@ -57,7 +57,7 @@ public class EnemySpawner : MonoBehaviour
     }
     public IEnumerator SpawnEnemy()
     {
-        if (!goldenSpawn)
+        if (!bossAlive)
         {
             int enemyRange = Random.Range(1, 100);
             if (enemyRange <= enemy1RNG) enemyIndex = 0;
@@ -157,28 +157,27 @@ public class EnemySpawner : MonoBehaviour
             case 40:
                 enemy1RNG = 60;
                 enemy2RNG = 85;
-                enemy3RNG = 95;
-                enemy4RNG = 100;
+                enemy3RNG = 100;
+                enemy4RNG = 101;
                 break;
 
             case 50:
-                if (!goldenSpawn)
+                enemy1RNG = 50;
+                enemy2RNG = 80;
+                enemy3RNG = 90;
+                enemy4RNG = 100;
+
+                if (!bossAlive)
                 {
                     GameObject newEnemy = Instantiate(enemies[4], new Vector3(0f, 0f, 0f), Quaternion.identity);
                     newEnemy.transform.localScale = Vector3.zero;
                     LeanTween.scale(newEnemy, new Vector3(1f, 1f, 1f), 0.3f).setEase(LeanTweenType.easeOutBack);
                     newEnemy.GetComponentInChildren<Animator>().SetBool("spawn", true);
-                    goldenSpawn = true;
+                    bossAlive = true;
                     newEnemy.GetComponent<EnemyController>().isGolden = true;
                 }
                 break;
 
-            case 55:
-                enemy1RNG = 50;
-                enemy2RNG = 80;
-                enemy3RNG = 90;
-                enemy4RNG = 100;
-                break;
             case 70:
                 enemy1RNG = 35;
                 enemy2RNG = 70;
