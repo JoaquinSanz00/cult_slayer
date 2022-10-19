@@ -14,7 +14,6 @@ public class CrossHair : MonoBehaviour
         Cursor.visible = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         handTransform.position = Input.mousePosition + new Vector3(offset.x,offset.y);

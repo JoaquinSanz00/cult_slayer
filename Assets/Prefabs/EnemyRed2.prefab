@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: c2ff5fa854eb5e241a1205cb3363d56e, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.49019608}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.27450982}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -337,6 +337,8 @@ MonoBehaviour:
   enemySpawner: {fileID: 0}
   shadow: {fileID: 4337469215981429616}
   damageSprite: {fileID: 1430291637539742826}
+  dead: 0
+  isGolden: 0
 --- !u!135 &2551311444508672984
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -348,7 +350,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.75
+  m_Radius: 0.8
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &537910202744418588
 Rigidbody:

@@ -12,11 +12,13 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] float spawnRate;
     [SerializeField] public int currentKills;
     [SerializeField] public int totalKills;
-    [SerializeField] public int totalEnemies;
+    [SerializeField] public int currentEnemies;
     [SerializeField] TextMeshProUGUI totalKillsText;
     [SerializeField] int enemy1RNG, enemy2RNG, enemy3RNG, enemy4RNG;
     int enemyIndex;
     [SerializeField] public bool gameOver;
+
+    [SerializeField] public bool goldenSpawn;
 
     [SerializeField] Animator uiAnim;
     [SerializeField] GameObject[] startPieces;
@@ -37,7 +39,7 @@ public class EnemySpawner : MonoBehaviour
 
     void Update()
     {
-        if (totalEnemies >= 6)
+        if (currentEnemies >= 6)
         {
             uiAnim.SetBool("gameover", true);
             gameOver = true;
@@ -53,44 +55,76 @@ public class EnemySpawner : MonoBehaviour
     {
         Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
     }
-    IEnumerator SpawnEnemy()
+    public IEnumerator SpawnEnemy()
     {
-        int enemyRange = Random.Range(1, 100);
-        if (enemyRange <= enemy1RNG) enemyIndex = 0;
-        if (enemyRange > enemy1RNG && enemyRange < enemy3RNG) enemyIndex = 1;
-        if (enemyRange > enemy2RNG && enemyRange < enemy4RNG) enemyIndex = 2;
-        if (enemyRange >= enemy3RNG) enemyIndex = 3;
-
-        Vector3 randomLocation = new Vector3(Random.Range(-6.5f, 6.5f), Random.Range(-3.6f, 3.6f), 0f);
-
-        GameObject newEnemy = Instantiate(enemies[enemyIndex], randomLocation , Quaternion.identity);
-
-        totalEnemies++;
-
-        newEnemy.transform.localScale = Vector3.zero;
-        LeanTween.scale(newEnemy, new Vector3(1f, 1f, 1f), 0.3f).setEase(LeanTweenType.easeOutBack);
-        newEnemy.GetComponentInChildren<Animator>().SetBool("spawn", true);
-
-        if (randomLocation.x > 0)
+        if (!goldenSpawn)
         {
-            newEnemy.transform.localScale = new Vector3(1f, 1f, 1f);
+            int enemyRange = Random.Range(1, 100);
+            if (enemyRange <= enemy1RNG) enemyIndex = 0;
+            if (enemyRange > enemy1RNG && enemyRange < enemy3RNG) enemyIndex = 1;
+            if (enemyRange > enemy2RNG && enemyRange < enemy4RNG) enemyIndex = 2;
+            if (enemyRange >= enemy3RNG) enemyIndex = 3;
+
+            Vector3 randomLocation = new Vector3(Random.Range(-6.5f, 6.5f), Random.Range(-3.6f, 3.6f), 0f);
+
+            GameObject newEnemy = Instantiate(enemies[enemyIndex], randomLocation, Quaternion.identity);
+
+            currentEnemies++;
+
+            newEnemy.transform.localScale = Vector3.zero;
+            LeanTween.scale(newEnemy, new Vector3(1f, 1f, 1f), 0.3f).setEase(LeanTweenType.easeOutBack);
+            newEnemy.GetComponentInChildren<Animator>().SetBool("spawn", true);
+
+            if (randomLocation.x > 0)
+            {
+                newEnemy.transform.localScale = new Vector3(1f, 1f, 1f);
+            }
+
+            if (randomLocation.x < 0)
+            {
+                newEnemy.transform.localScale = new Vector3(-1f, 1f, 1f);
+            }
+
+            yield return new WaitForSeconds(spawnRate);
+
+            if (!gameOver) StartCoroutine(SpawnEnemy());
         }
+    }
 
-        if (randomLocation.x < 0)
-        {
-            newEnemy.transform.localScale = new Vector3(-1f, 1f, 1f);
-        }
-
-        yield return new WaitForSeconds(spawnRate);
-
-        if(!gameOver) StartCoroutine(SpawnEnemy());
+    public void ResumeSpawning()
+    {
+        StartCoroutine(SpawnEnemy());
     }
 
     void IncreaseSpawnRate()
     {
         if (currentKills == 5)
         {
-            spawnRate *= 0.95f;
+            if (totalKills < 30)
+            {
+                spawnRate *= 0.90f;
+            }
+
+            if (totalKills > 30 && totalKills < 60)
+            {
+                spawnRate *= 0.96f;
+            }
+
+            if (totalKills > 60 && totalKills < 100)
+            {
+                spawnRate *= 0.97f;
+            }
+
+            if (totalKills > 100 && totalKills < 150)
+            {
+                spawnRate *= 0.98f;
+            }
+
+            if (totalKills > 200)
+            {
+                spawnRate *= 0.99f;
+            }
+
             currentKills = 0;
         }
 
@@ -126,6 +160,19 @@ public class EnemySpawner : MonoBehaviour
                 enemy3RNG = 95;
                 enemy4RNG = 100;
                 break;
+
+            case 50:
+                if (!goldenSpawn)
+                {
+                    GameObject newEnemy = Instantiate(enemies[4], new Vector3(0f, 0f, 0f), Quaternion.identity);
+                    newEnemy.transform.localScale = Vector3.zero;
+                    LeanTween.scale(newEnemy, new Vector3(1f, 1f, 1f), 0.3f).setEase(LeanTweenType.easeOutBack);
+                    newEnemy.GetComponentInChildren<Animator>().SetBool("spawn", true);
+                    goldenSpawn = true;
+                    newEnemy.GetComponent<EnemyController>().isGolden = true;
+                }
+                break;
+
             case 55:
                 enemy1RNG = 50;
                 enemy2RNG = 80;
@@ -160,32 +207,62 @@ public class EnemySpawner : MonoBehaviour
 
     void ActivateStar()
     {
-        switch(totalEnemies)
+        switch(currentEnemies)
         {
             case 0:
                 LeanTween.color(startPieces[0], Color.clear, 0.1f);
+                LeanTween.color(startPieces[1], Color.clear, 0.1f);
+                LeanTween.color(startPieces[2], Color.clear, 0.1f);
+                LeanTween.color(startPieces[3], Color.clear, 0.1f);
+                LeanTween.color(startPieces[4], Color.clear, 0.1f);
+                LeanTween.color(startPieces[5], Color.clear, 0.1f);
                 break;
             case 1:
                 LeanTween.color(startPieces[0], Color.white, 0.1f);
                 LeanTween.color(startPieces[1], Color.clear, 0.1f);
+                LeanTween.color(startPieces[2], Color.clear, 0.1f);
+                LeanTween.color(startPieces[3], Color.clear, 0.1f);
+                LeanTween.color(startPieces[4], Color.clear, 0.1f);
+                LeanTween.color(startPieces[5], Color.clear, 0.1f);
                 break;
             case 2:
+                LeanTween.color(startPieces[0], Color.white, 0.1f);
                 LeanTween.color(startPieces[1], Color.white, 0.1f);
                 LeanTween.color(startPieces[2], Color.clear, 0.1f);
+                LeanTween.color(startPieces[3], Color.clear, 0.1f);
+                LeanTween.color(startPieces[4], Color.clear, 0.1f);
+                LeanTween.color(startPieces[5], Color.clear, 0.1f);
                 break;
             case 3:
+                LeanTween.color(startPieces[0], Color.white, 0.1f);
+                LeanTween.color(startPieces[1], Color.white, 0.1f);
                 LeanTween.color(startPieces[2], Color.white, 0.1f);
                 LeanTween.color(startPieces[3], Color.clear, 0.1f);
+                LeanTween.color(startPieces[4], Color.clear, 0.1f);
+                LeanTween.color(startPieces[5], Color.clear, 0.1f);
                 break;
             case 4:
+                LeanTween.color(startPieces[0], Color.white, 0.1f);
+                LeanTween.color(startPieces[1], Color.white, 0.1f);
+                LeanTween.color(startPieces[2], Color.white, 0.1f);
                 LeanTween.color(startPieces[3], Color.white, 0.1f);
                 LeanTween.color(startPieces[4], Color.clear, 0.1f);
+                LeanTween.color(startPieces[5], Color.clear, 0.1f);
                 break;
             case 5:
+                LeanTween.color(startPieces[0], Color.white, 0.1f);
+                LeanTween.color(startPieces[1], Color.white, 0.1f);
+                LeanTween.color(startPieces[2], Color.white, 0.1f);
+                LeanTween.color(startPieces[3], Color.white, 0.1f);
                 LeanTween.color(startPieces[4], Color.white, 0.1f);
                 LeanTween.color(startPieces[5], Color.clear, 0.1f);
                 break;
             case 6:
+                LeanTween.color(startPieces[0], Color.white, 0.1f);
+                LeanTween.color(startPieces[1], Color.white, 0.1f);
+                LeanTween.color(startPieces[2], Color.white, 0.1f);
+                LeanTween.color(startPieces[3], Color.white, 0.1f);
+                LeanTween.color(startPieces[4], Color.white, 0.1f);
                 LeanTween.color(startPieces[5], Color.white, 0.1f);
                 break;
         }

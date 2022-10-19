@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour
 
                 if (hit.collider.transform.tag == "DeathWall" && canDash)
                 {
+                    dashDir = hit.collider.gameObject.transform.position - transform.position;
                     canDash = false;
                     LeanTween.move(gameObject, hit.point, 0.1f).setOnComplete(GetStunned);
                 }
