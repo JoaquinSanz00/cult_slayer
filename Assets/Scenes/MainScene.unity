@@ -1454,7 +1454,7 @@ MonoBehaviour:
   gameOver: 0
   goldenSpawn: 0
   uiAnim: {fileID: 221233271}
-  startPieces:
+  enemyBar:
   - {fileID: 1226018579}
   - {fileID: 726453479}
   - {fileID: 2047785648}

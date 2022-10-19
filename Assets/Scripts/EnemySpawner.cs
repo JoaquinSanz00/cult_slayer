@@ -21,7 +21,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] public bool goldenSpawn;
 
     [SerializeField] Animator uiAnim;
-    [SerializeField] GameObject[] startPieces;
+    [SerializeField] GameObject[] enemyBar;
     void Start()
     {
         gameOver = false;
@@ -210,60 +210,60 @@ public class EnemySpawner : MonoBehaviour
         switch(currentEnemies)
         {
             case 0:
-                LeanTween.color(startPieces[0], Color.clear, 0.1f);
-                LeanTween.color(startPieces[1], Color.clear, 0.1f);
-                LeanTween.color(startPieces[2], Color.clear, 0.1f);
-                LeanTween.color(startPieces[3], Color.clear, 0.1f);
-                LeanTween.color(startPieces[4], Color.clear, 0.1f);
-                LeanTween.color(startPieces[5], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[0], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[1], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[2], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[3], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[4], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[5], Color.clear, 0.1f);
                 break;
             case 1:
-                LeanTween.color(startPieces[0], Color.white, 0.1f);
-                LeanTween.color(startPieces[1], Color.clear, 0.1f);
-                LeanTween.color(startPieces[2], Color.clear, 0.1f);
-                LeanTween.color(startPieces[3], Color.clear, 0.1f);
-                LeanTween.color(startPieces[4], Color.clear, 0.1f);
-                LeanTween.color(startPieces[5], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[0], Color.white, 0.1f);
+                LeanTween.color(enemyBar[1], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[2], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[3], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[4], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[5], Color.clear, 0.1f);
                 break;
             case 2:
-                LeanTween.color(startPieces[0], Color.white, 0.1f);
-                LeanTween.color(startPieces[1], Color.white, 0.1f);
-                LeanTween.color(startPieces[2], Color.clear, 0.1f);
-                LeanTween.color(startPieces[3], Color.clear, 0.1f);
-                LeanTween.color(startPieces[4], Color.clear, 0.1f);
-                LeanTween.color(startPieces[5], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[0], Color.white, 0.1f);
+                LeanTween.color(enemyBar[1], Color.white, 0.1f);
+                LeanTween.color(enemyBar[2], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[3], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[4], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[5], Color.clear, 0.1f);
                 break;
             case 3:
-                LeanTween.color(startPieces[0], Color.white, 0.1f);
-                LeanTween.color(startPieces[1], Color.white, 0.1f);
-                LeanTween.color(startPieces[2], Color.white, 0.1f);
-                LeanTween.color(startPieces[3], Color.clear, 0.1f);
-                LeanTween.color(startPieces[4], Color.clear, 0.1f);
-                LeanTween.color(startPieces[5], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[0], Color.white, 0.1f);
+                LeanTween.color(enemyBar[1], Color.white, 0.1f);
+                LeanTween.color(enemyBar[2], Color.white, 0.1f);
+                LeanTween.color(enemyBar[3], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[4], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[5], Color.clear, 0.1f);
                 break;
             case 4:
-                LeanTween.color(startPieces[0], Color.white, 0.1f);
-                LeanTween.color(startPieces[1], Color.white, 0.1f);
-                LeanTween.color(startPieces[2], Color.white, 0.1f);
-                LeanTween.color(startPieces[3], Color.white, 0.1f);
-                LeanTween.color(startPieces[4], Color.clear, 0.1f);
-                LeanTween.color(startPieces[5], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[0], Color.white, 0.1f);
+                LeanTween.color(enemyBar[1], Color.white, 0.1f);
+                LeanTween.color(enemyBar[2], Color.white, 0.1f);
+                LeanTween.color(enemyBar[3], Color.white, 0.1f);
+                LeanTween.color(enemyBar[4], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[5], Color.clear, 0.1f);
                 break;
             case 5:
-                LeanTween.color(startPieces[0], Color.white, 0.1f);
-                LeanTween.color(startPieces[1], Color.white, 0.1f);
-                LeanTween.color(startPieces[2], Color.white, 0.1f);
-                LeanTween.color(startPieces[3], Color.white, 0.1f);
-                LeanTween.color(startPieces[4], Color.white, 0.1f);
-                LeanTween.color(startPieces[5], Color.clear, 0.1f);
+                LeanTween.color(enemyBar[0], Color.white, 0.1f);
+                LeanTween.color(enemyBar[1], Color.white, 0.1f);
+                LeanTween.color(enemyBar[2], Color.white, 0.1f);
+                LeanTween.color(enemyBar[3], Color.white, 0.1f);
+                LeanTween.color(enemyBar[4], Color.white, 0.1f);
+                LeanTween.color(enemyBar[5], Color.clear, 0.1f);
                 break;
             case 6:
-                LeanTween.color(startPieces[0], Color.white, 0.1f);
-                LeanTween.color(startPieces[1], Color.white, 0.1f);
-                LeanTween.color(startPieces[2], Color.white, 0.1f);
-                LeanTween.color(startPieces[3], Color.white, 0.1f);
-                LeanTween.color(startPieces[4], Color.white, 0.1f);
-                LeanTween.color(startPieces[5], Color.white, 0.1f);
+                LeanTween.color(enemyBar[0], Color.white, 0.1f);
+                LeanTween.color(enemyBar[1], Color.white, 0.1f);
+                LeanTween.color(enemyBar[2], Color.white, 0.1f);
+                LeanTween.color(enemyBar[3], Color.white, 0.1f);
+                LeanTween.color(enemyBar[4], Color.white, 0.1f);
+                LeanTween.color(enemyBar[5], Color.white, 0.1f);
                 break;
         }
     }
