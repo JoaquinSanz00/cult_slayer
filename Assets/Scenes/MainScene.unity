@@ -6463,7 +6463,7 @@ MonoBehaviour:
   - {fileID: 97966078}
   spawnRate: 1.5
   currentKills: 0
-  totalKills: 95
+  totalKills: 0
   currentEnemies: 0
   totalKillsText: {fileID: 214164037}
   enemy1RNG: 0
