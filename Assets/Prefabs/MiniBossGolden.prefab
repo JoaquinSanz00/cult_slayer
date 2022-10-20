@@ -24489,9 +24489,9 @@ MonoBehaviour:
   shadow: {fileID: 2737613641522580199}
   damageSprite: {fileID: 726582528599707133}
   dead: 0
-  isShadow: 0
-  isGolden: 0
+  enemyType: 2
   eyes: []
+  crossHair: {fileID: 0}
 --- !u!135 &4225546754178705999
 SphereCollider:
   m_ObjectHideFlags: 0

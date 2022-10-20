@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class IdleAnimController : MonoBehaviour
 {
-    [SerializeField] enum npcType {boss, minion, enemy, player};
+    [SerializeField] enum npcType {boss, minion, enemy, player, tower};
     [SerializeField] npcType NPCType;
 
     void Start()
@@ -31,6 +31,9 @@ public class IdleAnimController : MonoBehaviour
 
             case npcType.player:
                 gameObject.GetComponent<Animator>().SetBool("idle", true);
+                break;
+
+            case npcType.tower:
                 break;
         }
     }

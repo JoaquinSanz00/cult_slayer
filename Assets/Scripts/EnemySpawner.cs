@@ -170,11 +170,7 @@ public class EnemySpawner : MonoBehaviour
                 if (!bossAlive)
                 {
                     GameObject newEnemy = Instantiate(enemies[4], new Vector3(0f, 0f, 0f), Quaternion.identity);
-                    newEnemy.transform.localScale = Vector3.zero;
-                    LeanTween.scale(newEnemy, new Vector3(1f, 1f, 1f), 0.3f).setEase(LeanTweenType.easeOutBack);
-                    newEnemy.GetComponentInChildren<Animator>().SetBool("spawn", true);
                     bossAlive = true;
-                    newEnemy.GetComponent<EnemyController>().isGolden = true;
                 }
                 break;
 
@@ -195,6 +191,15 @@ public class EnemySpawner : MonoBehaviour
                 enemy2RNG = 50;
                 enemy3RNG = 75;
                 enemy4RNG = 100;
+
+                if (!bossAlive)
+                {
+                    GameObject newEnemy = Instantiate(enemies[5], new Vector3(0f, 3.5f, 0f), Quaternion.identity);
+                    newEnemy.transform.localScale = Vector3.zero;
+                    LeanTween.scale(newEnemy, new Vector3(1f, 1f, 1f), 0.3f).setEase(LeanTweenType.easeOutBack);
+                    newEnemy.GetComponentInChildren<Animator>().SetBool("spawn", true);
+                    bossAlive = true;
+                }
                 break;
         }
 

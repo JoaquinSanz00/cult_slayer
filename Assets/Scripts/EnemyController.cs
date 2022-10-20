@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
@@ -12,13 +13,26 @@ public class EnemyController : MonoBehaviour
     [SerializeField] SpriteRenderer shadow;
     [SerializeField] public SpriteRenderer damageSprite;
     [SerializeField] public bool dead;
-    [SerializeField] public bool isShadow;
-    [SerializeField] public bool isGolden;
+    [SerializeField] public enum EnemyType { normal, dark, golden, shadow, tower }
+    [SerializeField] public EnemyType enemyType;
+
     [SerializeField] GameObject[] eyes;
+    [SerializeField] int eyesAmount;
+
+    [SerializeField] CrossHair crossHair;
 
     void OnEnable()
     {
         enemySpawner = FindObjectOfType<EnemySpawner>();
+        crossHair = FindObjectOfType<CrossHair>();
+
+        if (enemyType == EnemyType.tower)
+        {
+            foreach(GameObject eye in eyes)
+            {
+                LeanTween.color(eye, Color.red, 1f);
+            }
+        }
     }
 
     void Update()
@@ -26,9 +40,21 @@ public class EnemyController : MonoBehaviour
         ClearForBoss();
     }
 
+    private void OnMouseEnter()
+    {
+        crossHair.isRed = true;
+        crossHair.ChangeCrossHair();
+    }
+
+    private void OnMouseExit()
+    {
+        crossHair.isRed = false;
+        crossHair.ChangeCrossHair();
+    }
+
     public void TakeDamage(Vector3 dashDir)
     {
-        if (!isShadow)
+        if (enemyType == EnemyType.normal || enemyType == EnemyType.dark || enemyType == EnemyType.tower)
         {
             health--;
             Die(dashDir);
@@ -36,7 +62,13 @@ public class EnemyController : MonoBehaviour
             LeanTween.scale(gameObject, gameObject.transform.localScale * 1.1f, 0.025f).setLoopPingPong(1);
         }
 
-        if (isShadow)
+        if (enemyType == EnemyType.tower && eyesAmount < maxHealth)
+        {
+            LeanTween.color(eyes[eyesAmount], Color.clear, 0.1f);
+            eyesAmount++;
+        }
+
+        if (enemyType == EnemyType.shadow)
         {
             LeanTween.color(damageSprite.gameObject, Color.white, 0.025f).setLoopPingPong(1);
             LeanTween.scale(gameObject, gameObject.transform.localScale * 1.1f, 0.025f).setLoopPingPong(1);
@@ -51,38 +83,49 @@ public class EnemyController : MonoBehaviour
                 health++;
             }
 
-            switch (health)
+            if (eyes != null)
             {
-                case 0:
-                    LeanTween.color(eyes[0], Color.clear, 0.1f);
-                    LeanTween.color(eyes[1], Color.clear, 0.1f);
-                    LeanTween.color(eyes[2], Color.clear, 0.1f);
-                    LeanTween.color(eyes[3], Color.clear, 0.1f);
-                    break;
+                switch (health)
+                {
+                    case 0:
+                        LeanTween.color(eyes[0], Color.clear, 0.1f);
+                        LeanTween.color(eyes[1], Color.clear, 0.1f);
+                        LeanTween.color(eyes[2], Color.clear, 0.1f);
+                        LeanTween.color(eyes[3], Color.clear, 0.1f);
+                        break;
 
-                case 1:
-                    LeanTween.color(eyes[0], Color.red, 0.1f);
-                    break;
+                    case 1:
+                        LeanTween.color(eyes[0], Color.red, 0.1f);
+                        break;
 
-                case 2:
-                    LeanTween.color(eyes[1], Color.red, 0.1f);
-                    break;
+                    case 2:
+                        LeanTween.color(eyes[1], Color.red, 0.1f);
+                        break;
 
-                case 3:
-                    LeanTween.color(eyes[2], Color.red, 0.1f);
-                    break;
+                    case 3:
+                        LeanTween.color(eyes[2], Color.red, 0.1f);
+                        break;
 
-                case 4:
-                    LeanTween.color(eyes[3], Color.red, 0.1f);
-                    break;
+                    case 4:
+                        LeanTween.color(eyes[3], Color.red, 0.1f);
+                        break;
+                }
             }
         }
     }
 
     public void Die(Vector3 deathAngle)
     {
-        if (health == 0 && !dead && !isShadow)
+        if (health == 0 && !dead && (enemyType == EnemyType.normal || enemyType == EnemyType.dark || enemyType == EnemyType.tower))
         {
+            LeanTween.color(damageSprite.gameObject, Color.clear, 0.025f);
+            damageSprite.gameObject.SetActive(false);
+
+            if (enemyType == EnemyType.tower)
+            {
+                gameObject.GetComponentInChildren<ParticleSystem>().Stop();
+            }
+
             gameObject.GetComponentInChildren<SpriteRenderer>().enabled = false;
             gameObject.GetComponent<SphereCollider>().enabled = false;
             shadow.enabled = false;
@@ -92,12 +135,17 @@ public class EnemyController : MonoBehaviour
             deathParticle.Play();
             deathExplosion.Play();
 
-            enemySpawner.currentEnemies--;
-            enemySpawner.totalKills++;
-            enemySpawner.currentKills++;
+            if (enemyType == EnemyType.normal || enemyType == EnemyType.dark) enemySpawner.currentEnemies--;
+
+            if (enemyType == EnemyType.normal)
+            {
+                enemySpawner.totalKills++;
+                enemySpawner.currentKills++;
+            }
+
             dead = true;
 
-            if (isGolden)
+            if (enemyType == EnemyType.golden)
             {
                 enemySpawner.bossAlive = false;
                 foreach (ParticleSystem flame in gameObject.GetComponent<GoldenMiniBoss>().flames)
@@ -106,9 +154,9 @@ public class EnemyController : MonoBehaviour
                 }
                 enemySpawner.currentEnemies = 0;
                 enemySpawner.ResumeSpawning();
-            } 
+            }
         }
-        if (isShadow && !enemySpawner.bossAlive)
+        if (enemyType == EnemyType.shadow && !enemySpawner.bossAlive)
         {
             gameObject.GetComponentInChildren<SpriteRenderer>().enabled = false;
             gameObject.GetComponent<SphereCollider>().enabled = false;
@@ -120,7 +168,7 @@ public class EnemyController : MonoBehaviour
 
     void ClearForBoss()
     {
-        if (enemySpawner.bossAlive && !dead && !isGolden)
+        if (enemySpawner.bossAlive && !dead && enemyType == EnemyType.normal)
         {
             gameObject.GetComponentInChildren<SpriteRenderer>().enabled = false;
             gameObject.GetComponent<SphereCollider>().enabled = false;
