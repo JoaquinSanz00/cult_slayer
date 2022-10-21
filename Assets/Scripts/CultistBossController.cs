@@ -47,7 +47,14 @@ public class CultistBossController : MonoBehaviour
 
         SpawnPillars();
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
+
+        foreach (GameObject pillar in pillars)
+        {
+            pillar.GetComponent<SphereCollider>().enabled = true;
+        }
+
+        yield return new WaitForSeconds(1f);
 
         StartSpawning();
 
@@ -97,6 +104,9 @@ public class CultistBossController : MonoBehaviour
             deathExplosion.Play();
             LeanTween.color(gameObject, Color.clear, 1.5f);
             bossDead = true;
+            enemySpawner.bossAlive = false;
+            enemySpawner.totalKills++;
+            LeanTween.delayedCall(2f, enemySpawner.ResumeSpawning);
         }
     }
 }

@@ -54,7 +54,7 @@ public class EnemyController : MonoBehaviour
 
     public void TakeDamage(Vector3 dashDir)
     {
-        if (enemyType == EnemyType.normal || enemyType == EnemyType.dark || enemyType == EnemyType.tower)
+        if (enemyType != EnemyType.shadow)
         {
             health--;
             Die(dashDir);
@@ -66,6 +66,12 @@ public class EnemyController : MonoBehaviour
         {
             LeanTween.color(eyes[eyesAmount], Color.clear, 0.1f);
             eyesAmount++;
+        }
+
+        if (enemyType == EnemyType.normal && eyesAmount <= maxHealth && !dead)
+        {
+            LeanTween.color(eyes[eyesAmount - 1], Color.gray, 0.1f);
+            eyesAmount--;
         }
 
         if (enemyType == EnemyType.shadow)
@@ -116,15 +122,10 @@ public class EnemyController : MonoBehaviour
 
     public void Die(Vector3 deathAngle)
     {
-        if (health == 0 && !dead && (enemyType == EnemyType.normal || enemyType == EnemyType.dark || enemyType == EnemyType.tower))
+        if (health == 0 && !dead && (enemyType != EnemyType.shadow))
         {
             LeanTween.color(damageSprite.gameObject, Color.clear, 0.025f);
             damageSprite.gameObject.SetActive(false);
-
-            if (enemyType == EnemyType.tower)
-            {
-                gameObject.GetComponentInChildren<ParticleSystem>().Stop();
-            }
 
             gameObject.GetComponentInChildren<SpriteRenderer>().enabled = false;
             gameObject.GetComponent<SphereCollider>().enabled = false;
@@ -135,27 +136,42 @@ public class EnemyController : MonoBehaviour
             deathParticle.Play();
             deathExplosion.Play();
 
-            if (enemyType == EnemyType.normal || enemyType == EnemyType.dark) enemySpawner.currentEnemies--;
-
-            if (enemyType == EnemyType.normal)
+            switch (enemyType)
             {
-                enemySpawner.totalKills++;
-                enemySpawner.currentKills++;
-            }
+                case EnemyType.normal:
+                    foreach (GameObject eye in eyes)
+                    {
+                        LeanTween.color(eye, Color.clear, 0.025f);
+                    }
+                    enemySpawner.totalKills++;
+                    enemySpawner.currentKills++;
+                    enemySpawner.currentEnemies--;
+                    break;
 
+                case EnemyType.dark:
+                    enemySpawner.currentEnemies--;
+                    break;
+
+                case EnemyType.golden:
+                    enemySpawner.bossAlive = false;
+                    foreach (ParticleSystem flame in gameObject.GetComponent<GoldenMiniBoss>().flames)
+                    {
+                        flame.Stop();
+                    }
+                    enemySpawner.currentEnemies = 0;
+                    enemySpawner.totalKills++;
+                    enemySpawner.currentKills++;
+                    enemySpawner.ResumeSpawning();
+                    break;
+
+                case EnemyType.tower:
+                    gameObject.GetComponentInChildren<ParticleSystem>().Stop();
+                    break;
+
+            }
             dead = true;
-
-            if (enemyType == EnemyType.golden)
-            {
-                enemySpawner.bossAlive = false;
-                foreach (ParticleSystem flame in gameObject.GetComponent<GoldenMiniBoss>().flames)
-                {
-                    flame.Stop();                 
-                }
-                enemySpawner.currentEnemies = 0;
-                enemySpawner.ResumeSpawning();
-            }
         }
+
         if (enemyType == EnemyType.shadow && !enemySpawner.bossAlive)
         {
             gameObject.GetComponentInChildren<SpriteRenderer>().enabled = false;
@@ -169,6 +185,16 @@ public class EnemyController : MonoBehaviour
     void ClearForBoss()
     {
         if (enemySpawner.bossAlive && !dead && enemyType == EnemyType.normal)
+        {
+            gameObject.GetComponentInChildren<SpriteRenderer>().enabled = false;
+            gameObject.GetComponent<SphereCollider>().enabled = false;
+            shadow.enabled = false;
+            deathExplosion.Play();
+            enemySpawner.currentEnemies--;
+            dead = true;
+        }
+
+        if (!enemySpawner.bossAlive && !dead && enemyType == EnemyType.dark)
         {
             gameObject.GetComponentInChildren<SpriteRenderer>().enabled = false;
             gameObject.GetComponent<SphereCollider>().enabled = false;

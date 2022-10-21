@@ -22,6 +22,8 @@ public class EnemySpawner : MonoBehaviour
 
     [SerializeField] Animator uiAnim;
     [SerializeField] GameObject[] enemyBar;
+
+    [SerializeField] PlayerController player;
     void Start()
     {
         gameOver = false;
@@ -41,8 +43,8 @@ public class EnemySpawner : MonoBehaviour
     {
         if (currentEnemies >= 6)
         {
-            uiAnim.SetBool("gameover", true);
-            gameOver = true;
+            GameOver();
+            currentEnemies = 0;
         }
 
         totalKillsText.text = $"{totalKills}";
@@ -51,6 +53,12 @@ public class EnemySpawner : MonoBehaviour
         ActivateStar();
     }
 
+    void GameOver()
+    {
+        uiAnim.SetBool("gameover", true);
+        gameOver = true;
+        player.PlayerDie();
+    }
     public void ResetScene()
     {
         Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);

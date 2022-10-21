@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool didDamage;
     [SerializeField] bool canDash;
     [SerializeField] ParticleSystem stunParticles;
+    [SerializeField] ParticleSystem deathParticles;
     [SerializeField] EnemySpawner enemySpawner;
 
     GameObject currentEnemy;
@@ -74,7 +75,6 @@ public class PlayerController : MonoBehaviour
             canDash = true;
         }
     }
-
     void GetStunned()
     {
         StartCoroutine(GetStunnedCR());
@@ -87,5 +87,11 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         canDash = true;
+    }
+
+    public void PlayerDie()
+    {
+        LeanTween.color(playerSprite, Color.clear, 0.5f);
+        deathParticles.Play();
     }
 }
