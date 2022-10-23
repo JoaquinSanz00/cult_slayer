@@ -141,7 +141,7 @@ public class EnemyController : MonoBehaviour
                 case EnemyType.normal:
                     foreach (GameObject eye in eyes)
                     {
-                        LeanTween.color(eye, Color.clear, 0.025f);
+                        eye.SetActive(false);
                     }
                     enemySpawner.totalKills++;
                     enemySpawner.currentKills++;
